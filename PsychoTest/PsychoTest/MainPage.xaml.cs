@@ -1,67 +1,83 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using Xamarin.Forms;
 
 namespace PsychoTest
 {
     public enum TestType
     {
-        ColorTest,
-        SoundTest,
-        RandomPointTest,
-        ColorPointTest,
-        EvenOdd
+        Color,
+        Sound,
+        RandomPoint,
+        ColorPoint,
+        EvenOdd,
+        Arrow,
+        IndividualMinute
     }
     public partial class MainPage : ContentPage
     {
+        public static string[] TestNames =
+        {
+            Data.ColorName,
+            Data.SoundName,
+            Data.RandomPointName,
+            Data.ColorPointName,
+            Data.EvenOddName,
+            Data.ArrowName,
+            Data.IndividualMinuteName
+        };
+
+
+
+        public static TestType[] TestTypes =
+        {
+            TestType.Color,
+            TestType.Sound,
+            TestType.RandomPoint,
+            TestType.ColorPoint,
+            TestType.EvenOdd,
+            TestType.Arrow,
+            TestType.IndividualMinute
+        };
+
+        public string test { get; set; }
+
         public MainPage()
         {
             InitializeComponent();
 
+            var userResult = new UserResult();
+            var stackLayout = new StackLayout();
+            var buttons = TestTypes.Select(t => new Button 
+            { 
+                Text = TestNames[(int)t],
+                Command = new Command(() => Navigation.PushAsync(new TestPreviewPage(t, userResult)))
+            });
 
-            Content = new StackLayout
-            {
-                Children =
+
+            foreach (var button in buttons)
+                stackLayout.Children.Add(button);
+
+            stackLayout.Children.Add(
+                new Button 
                 {
-                    new Button
-                    {
-                        Text = "Тест на цвет",
-                        Command = new Command(() => Navigation.PushAsync(new Test1Page(TestType.ColorTest)))
-                    },
-                    new Button
-                    {
-                        Text = "Тест на звук",
-                        Command = new Command(() => Navigation.PushAsync(new Test1Page(TestType.SoundTest)))
-                    },
-                    new Button
-                    {
-                        Text = "Тест на квадрат",
-                        Command = new Command(() => Navigation.PushAsync(new Test1Page(TestType.RandomPointTest)))
-                    },
-                    new Button
-                    {
-                        Text = "Тест на цветной квадрат",
-                        Command = new Command(() => Navigation.PushAsync(new Test2Page(TestType.ColorPointTest)))
-                    },
-                    new Button
-                    {
-                        Text = "Тест на четное нечетное",
-                        Command = new Command(() => Navigation.PushAsync(new Test2Page(TestType.EvenOdd)))
-                    },
-                    new Button
-                    {
-                        Text = "Тест на стрелки",
-                        Command = new Command(() => Navigation.PushAsync(new ArrowPage(ArrowPage.Arrow.Up)))
-                    },
-                    new Button
-                    {
-                        Text = "Индивидуальная минута",
-                        Command = new Command(() => Navigation.PushAsync(new IndividualMinuteClockPage()))
-                    }
+                    Text = "Сохранить результат",
+                    Command = new Command(() => Navigation.PushAsync(new SavePage(userResult)))
+                });
+
+            stackLayout.Children.Add(
+                new Button
+                {
+                    Text = "Показать результаты",
+                    Command = new Command(() => Navigation.PushAsync(new ShowAllResultsPage()))
+                });
 
 
 
-                }
+            Content = new ScrollView
+            {
+                Content = stackLayout
             };
 
         }

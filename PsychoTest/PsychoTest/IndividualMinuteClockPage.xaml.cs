@@ -31,8 +31,13 @@ namespace PsychoTest
 
         BoxView[] tickMarks = new BoxView[60];
 
-        public IndividualMinuteClockPage()
+        UserResult userResult;
+        TestType testType;
+
+        public IndividualMinuteClockPage(UserResult userResult, TestType testType)
         {
+            this.userResult = userResult;
+            this.testType = testType;
             InitializeComponent();
             // Create the tick marks (to be sized and positioned later).  
             for (int i = 0; i < tickMarks.Length; i++)
@@ -82,14 +87,14 @@ namespace PsychoTest
         }
 
         int currentSeccond = 0;
-        int maxSeconds = 5;
+        int maxSeconds = 60;
 
         bool OnTimerTick()
         {
             secondHand.Rotation = 6 * currentSeccond;
             if (currentSeccond == maxSeconds)
             {
-                Navigation.PushAsync(new IndividualMinuteTestPage());
+                Navigation.PushAsync(new IndividualMinuteTestPage(userResult, testType));
                 return false;
             }
             currentSeccond++;

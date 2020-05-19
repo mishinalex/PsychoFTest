@@ -15,10 +15,12 @@ namespace PsychoTest
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class Test2Page : ContentPage
     {
-        const int countOfTests = 5;
+        const int countOfTests = 10;
         int countOfMistakes = 0;
         List<TimeSpan> results = new List<TimeSpan>();
         DateTime lastDate;
+        UserResult userResult;
+        TestType testType;
 
         DateTime startEvent(Action action)
         {
@@ -32,7 +34,7 @@ namespace PsychoTest
                 countOfMistakes++;
             results.Add(DateTime.Now - lastDate);
             if (results.Count == countOfTests)
-                Navigation.PushAsync(new ResultPage(results, countOfMistakes));
+                Navigation.PushAsync(new ResultPage(results, countOfMistakes, userResult, testType));
             else
                 lastDate = startEvent(action);
         }
@@ -45,9 +47,13 @@ namespace PsychoTest
         }
 
 
-        public Test2Page(TestType testType)
+        public Test2Page(TestType testType, UserResult userResult)
         {
             InitializeComponent();
+
+            this.userResult = userResult;
+
+            this.testType = testType;
 
             var random = new Random();
             var currentState = 0;
@@ -57,7 +63,7 @@ namespace PsychoTest
 
             Action testEvent;
 
-            if (testType == TestType.ColorPointTest)
+            if (testType == TestType.ColorPoint)
             {
                 var points = new[]
                 {
@@ -77,8 +83,8 @@ namespace PsychoTest
                     layout.Children.Clear();
                     layout.Children.Add(
                         points[currentState],
-                        Constraint.RelativeToParent((parent) => random.Next(0, (int)parent.Width)),
-                        Constraint.RelativeToParent((parent) => random.Next(0, (int)parent.Height)),
+                        Constraint.RelativeToParent((parent) => random.Next(30, (int)parent.Width - 30)),
+                        Constraint.RelativeToParent((parent) => random.Next(30, (int)parent.Height - 30)),
                         Constraint.Constant(30),
                         Constraint.Constant(30)
                     );

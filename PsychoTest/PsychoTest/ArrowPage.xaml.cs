@@ -25,7 +25,7 @@ namespace PsychoTest
         public static readonly string[] Arrows = { "↑", "↓", "←", "→", "✕" };
 
 
-        public ArrowPage(Arrow correctArrow)
+        public ArrowPage(Arrow correctArrow, UserResult userResult, TestType testType)
         {
             InitializeComponent();
             var countOfCorrect = 0;
@@ -98,7 +98,7 @@ namespace PsychoTest
                 {
                     Text = "Закончить",
                     Command = new Command(() => Navigation.PushAsync(
-                        new ResultPage(countOfCorrect, countOfMistakes, countOfArrows, DateTime.Now - startTime)
+                        new ResultPage(countOfCorrect, countOfMistakes, countOfArrows, DateTime.Now - startTime, userResult, testType)
                         )
                     )
                 },

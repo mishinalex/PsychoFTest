@@ -12,7 +12,7 @@ namespace PsychoTest
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class IndividualMinuteTestPage : ContentPage
     {
-        public IndividualMinuteTestPage()
+        public IndividualMinuteTestPage(UserResult userResult, TestType testType)
         {
             InitializeComponent();
             var relativeLayout = new RelativeLayout();
@@ -40,7 +40,7 @@ namespace PsychoTest
                 else
                 {
                     var resultTime = DateTime.Now - startDate;
-                    Navigation.PushAsync(new ResultPage(resultTime));
+                    Navigation.PushAsync(new ResultPage(resultTime, userResult, testType));
                 }
             };
                 

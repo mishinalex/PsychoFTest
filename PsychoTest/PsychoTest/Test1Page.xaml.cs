@@ -42,7 +42,7 @@ namespace PsychoTest
         }
 
 
-        public Test1Page(TestType testType)
+        public Test1Page(TestType testType, UserResult userResult)
         {
             InitializeComponent();
             var button = new Button();
@@ -64,12 +64,12 @@ namespace PsychoTest
                 Constraint.RelativeToParent((parent) => parent.Height)
                 );
 
-            if (testType == TestType.ColorTest)
+            if (testType == TestType.Color)
             {
                 startEvent = () => button.BackgroundColor = Color.Red;
                 cancelEvent = () => button.BackgroundColor = Color.White;
             }
-            else if (testType == TestType.SoundTest)
+            else if (testType == TestType.Sound)
             {
                 player = new MediaPlayer();
                 player.Reset();
@@ -91,8 +91,8 @@ namespace PsychoTest
 
                 startEvent = () => layout.Children.Add(
                     redBox,
-                    Constraint.RelativeToParent((parent) => random.Next(0, (int)parent.Width)), 
-                    Constraint.RelativeToParent((parent) => random.Next(0, (int)parent.Height)),
+                    Constraint.RelativeToParent((parent) => random.Next(30, (int)parent.Width - 30)), 
+                    Constraint.RelativeToParent((parent) => random.Next(30, (int)parent.Height - 30)),
                     Constraint.Constant(30), 
                     Constraint.Constant(30)
                     );
@@ -112,7 +112,7 @@ namespace PsychoTest
                     {
                         player?.Stop();
                         player?.Release();
-                        Navigation.PushAsync(new ResultPage(results, countOfMistakes));
+                        Navigation.PushAsync(new ResultPage(results, countOfMistakes, userResult, testType));
                     }
                     else
                         task = this.startEvent(startEvent, random.Next(2000, 5000));
@@ -130,6 +130,13 @@ namespace PsychoTest
             player?.Stop();
             player?.Release();
             return base.OnBackButtonPressed();
+        }
+
+        protected override void OnDisappearing()
+        {
+            player?.Stop();
+            player?.Release();
+            base.OnDisappearing();
         }
     }
 }
